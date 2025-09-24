@@ -1,11 +1,11 @@
 services:
   mai_os:
-  
     build: .
-    volumes:
-      - .:/workspace
-    ports:
-      - "3000:3000"
     stdin_open: true
     tty: true
     command: sleep infinity
+    develop:
+      watch:
+         - action: sync
+           path: .
+           target: /workspace
