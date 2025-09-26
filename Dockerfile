@@ -11,10 +11,10 @@ RUN apt-get update
 RUN apt-get install -y --no-upgrade cmake clang-tidy sudo
 RUN useradd -m -s /bin/bash developer && \
     echo "developer ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+COPY . ./workspace
+WORKDIR /workspace
 RUN chown -R developer:developer /workspace 
 USER developer
-COPY . .
-WORKDIR /workspace
 CMD ["/bin/bash"]
 # This command runs your application, comment out this line to compile only
 LABEL Name=mai_os Version=0.0.1
