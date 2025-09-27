@@ -48,6 +48,7 @@ int main() {
     return -1;
   } else if (child_id == -1) {
     // error
+		PrintLastError();
     return -1;
   } else {
     // parent
