@@ -1,4 +1,5 @@
 #include "os.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -20,4 +21,11 @@ int ReadPipe(pipe_t pipe, void *buffer, size_t bytes) {
 }
 int LinkStdinWithPipe(pipe_t output_pipe) {
   return dup2(output_pipe, STDIN_FILENO);
+}
+int LinkStderrWithPipe(pipe_t output_pipe) {
+  return dup2(output_pipe, STDERR_FILENO);
+}
+int HasTerminated(pid_t child_process){
+	int status;
+	return waitpid(child_process, &status, WNOHANG);
 }

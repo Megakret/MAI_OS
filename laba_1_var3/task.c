@@ -1,5 +1,5 @@
-#include "os.h"
 #include <stdio.h>
+#include <os.h>
 const char *kOutputFileName = "output.txt";
 int main() {
   int num = 0;
@@ -9,13 +9,17 @@ int main() {
     return -1;
   }
   int divider = 1;
-  while (scanf("%d", &divider) > 0) {
+	int scanned = 0;
+  while ((scanned = scanf("%d", &divider)) > 0) {
     if (divider == 0) {
-      PrintLastError();
+			fprintf(stderr, "Error: division by 0 occured. Killing child process\n");
       return -1;
     }
     num /= divider;
   }
+		if(scanned == 0){
+			fprintf(stderr, "Error: Wrong format occured, stopped reading. Maybe you wrote letters\n");	
+		}
   // Error occured on reading numbers(not EOF)
   if (ferror(stdin)) {
     PrintLastError();
