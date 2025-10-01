@@ -15,7 +15,7 @@ void PrintErrorFromChild(pipe_t pipe) {
 pipe_t err_pipe_in;
 void OnChildKilled(signal_t signum) {
   PrintErrorFromChild(err_pipe_in);
-	exit(-1);
+  exit(-1);
 }
 int main() {
   AddSignalHandler(ChildDeathSig, &OnChildKilled);
@@ -85,7 +85,7 @@ int main() {
     ClosePipe(input_pipe[0]);
     ClosePipe(err_pipe[1]);
     char buffer[kBuffer];
-		int read_chars = 0;
+    int read_chars = 0;
     while ((read_chars = ReadFromStdin(buffer, kBuffer)) > 0) {
       err = WritePipe(input_pipe[1], buffer, read_chars);
       if (err == -1) {
