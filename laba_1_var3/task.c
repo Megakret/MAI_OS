@@ -13,7 +13,7 @@ int main() {
   while ((scanned = scanf("%d", &divider)) > 0) {
     if (divider == 0) {
 			fprintf(stderr, "Error: division by 0 occured. Killing child process\n");
-      return -1;
+			break;
     }
     num /= divider;
   }
