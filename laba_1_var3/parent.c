@@ -1,7 +1,24 @@
-#include "os.h"
+#include <os.h>
 #include <stdio.h>
-const size_t kBuffer= 100;
+const size_t kBuffer = 100;
+void PrintErrorFromChild(pipe_t pipe) {
+  char buffer[kBuffer];
+  int bytesN = ReadPipe(pipe, buffer, kBuffer);
+  if (bytesN > 0) {
+    fprintf(stderr, "Error from child: ");
+  }
+  while (bytesN > 0) {
+    fwrite(buffer, sizeof(char), bytesN, stderr);
+    bytesN = ReadPipe(pipe, buffer, kBuffer);
+  }
+}
+pipe_t err_pipe_in;
+void OnChildKilled(signal_t signum) {
+  PrintErrorFromChild(err_pipe_in);
+  exit(-1);
+}
 int main() {
+  AddSignalHandler(ChildDeathSig, &OnChildKilled);
   int err = printf("Write a filepath for a child process executable: ");
   if (err < 0) {
     PrintLastError();
@@ -21,11 +38,18 @@ int main() {
     }
   }
   pipe_t input_pipe[2];
+  pipe_t err_pipe[2];
   err = CreatePipe(input_pipe);
   if (err == -1) {
     PrintLastError();
     return -1;
   }
+  err = CreatePipe(err_pipe);
+  if (err == -1) {
+    PrintLastError();
+    return -1;
+  }
+  err_pipe_in = err_pipe[0];
   pid_t child_id = CloneProcess();
   if (child_id == 0) {
     // child
@@ -35,7 +59,13 @@ int main() {
       PrintLastError();
       return -1;
     }
+    err = LinkStderrWithPipe(err_pipe[1]);
+    if (err == -1) {
+      PrintLastError();
+      return -1;
+    }
     ClosePipe(input_pipe[1]);
+    ClosePipe(err_pipe[0]);
     if (err == -1) {
       PrintLastError();
       return -1;
@@ -48,24 +78,32 @@ int main() {
     return -1;
   } else if (child_id == -1) {
     // error
+    PrintLastError();
     return -1;
   } else {
     // parent
-    char c;
-    while ((c = getchar()) != EOF) {
-      err = WritePipe(input_pipe[1], &c, sizeof(char));
+    ClosePipe(input_pipe[0]);
+    ClosePipe(err_pipe[1]);
+    char buffer[kBuffer];
+    int read_chars = 0;
+    while ((read_chars = ReadFromStdin(buffer, kBuffer)) > 0) {
+      err = WritePipe(input_pipe[1], buffer, read_chars);
       if (err == -1) {
         PrintLastError();
         return -1;
       }
     }
-    ClosePipe(input_pipe[0]);
     ClosePipe(input_pipe[1]);
     if (err == -1) {
       PrintLastError();
       return -1;
     }
-    int err = WaitForChild();
+    PrintErrorFromChild(err_pipe[0]);
+    if (err == -1) {
+      PrintLastError();
+      return -1;
+    }
+    err = WaitForChild();
     if (err == -1) {
       PrintLastError();
       return -1;

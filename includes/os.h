@@ -1,14 +1,20 @@
 #include <stdlib.h>
-#include <unistd.h>
 typedef int pipe_t;
 typedef int pid_t;
 typedef int file_t;
+typedef typeof(void(int)) *SignalHandler_t;
+typedef int signal_t;
+extern const int ChildDeathSig;
+extern const int BrokenPipeSig;
 int CreatePipe(pipe_t fd_buffer[2]);
 pid_t CloneProcess();
 int Exec(const char *executable_path);
 void PrintLastError();
 int WaitForChild();
-void ClosePipe(pipe_t pipe_part);
+int ClosePipe(pipe_t pipe_part);
 int WritePipe(pipe_t pipe, void *buffer, size_t bytes);
 int ReadPipe(pipe_t pipe, void *buffer, size_t bytes);
 int LinkStdinWithPipe(pipe_t output_pipe);
+int LinkStderrWithPipe(pipe_t output_pipe);
+void AddSignalHandler(signal_t signal_type, SignalHandler_t signal_handler);
+int ReadFromStdin(char *buffer, size_t buffer_size);
