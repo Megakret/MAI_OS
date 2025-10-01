@@ -84,20 +84,14 @@ int main() {
     // parent
     ClosePipe(input_pipe[0]);
     ClosePipe(err_pipe[1]);
-    char c;
     char buffer[kBuffer];
-    while ((c = getchar()) != EOF) {
-      err = WritePipe(input_pipe[1], &c, sizeof(char));
+		int read_chars = 0;
+    while ((read_chars = ReadFromStdin(buffer, kBuffer)) > 0) {
+      err = WritePipe(input_pipe[1], buffer, read_chars);
       if (err == -1) {
         PrintLastError();
-        PrintErrorFromChild(err_pipe[0]);
         return -1;
       }
-    }
-    int err = ClosePipe(input_pipe[0]);
-    if (err == -1) {
-      PrintLastError();
-      return -1;
     }
     ClosePipe(input_pipe[1]);
     if (err == -1) {

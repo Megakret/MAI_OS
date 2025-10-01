@@ -17,3 +17,4 @@ int ReadPipe(pipe_t pipe, void *buffer, size_t bytes);
 int LinkStdinWithPipe(pipe_t output_pipe);
 int LinkStderrWithPipe(pipe_t output_pipe);
 void AddSignalHandler(signal_t signal_type, SignalHandler_t signal_handler);
+int ReadFromStdin(char* buffer, size_t buffer_size);

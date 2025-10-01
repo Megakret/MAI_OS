@@ -31,3 +31,6 @@ int LinkStderrWithPipe(pipe_t output_pipe) {
 void AddSignalHandler(signal_t signal_type, SignalHandler_t signal_handler) {
   signal(signal_type, signal_handler);
 }
+int ReadFromStdin(char* buffer, size_t buffer_size){
+	return read(STDIN_FILENO, buffer, buffer_size);
+}
