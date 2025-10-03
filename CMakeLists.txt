@@ -6,6 +6,7 @@ set(CMAKE_C_COMPILER )
     message("CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
 #хедеры
 set(INCLUDES ${CMAKE_SOURCE_DIR}/includes)
-#линковка
+
 add_subdirectory(os_wrapper)
 add_subdirectory(laba_1_var3)
+add_subdirectory(lab2_var18)
