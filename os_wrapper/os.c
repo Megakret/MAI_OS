@@ -1,4 +1,4 @@
-#include "os.h"
+#include <os.h>
 
 #include <errno.h>
 #include <fcntl.h>
@@ -6,6 +6,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <pthread.h>
 const int ChildDeathSig = SIGCHLD;
 const int BrokenPipeSig = SIGPIPE;
 int CreatePipe(pipe_t fd_buffer[2]) { return pipe(fd_buffer); }
@@ -33,4 +34,10 @@ void AddSignalHandler(signal_t signal_type, SignalHandler_t signal_handler) {
 }
 int ReadFromStdin(char *buffer, size_t buffer_size) {
   return read(STDIN_FILENO, buffer, buffer_size);
+}
+int CreateThread(thread_t* thread, ThreadFunction_t starter_func, void* arg){
+	return pthread_create(thread, NULL, starter_func, arg);
+}
+int JoinThread(thread_t thread){
+	return pthread_join(thread, NULL);
 }
