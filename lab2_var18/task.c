@@ -5,6 +5,7 @@
 #include <os.h>
 const int kBuffer = 1000;
 const int kThreadCount = 5;
+bool has_found_any_occurence = false;
 typedef struct {
   char *field;
   char *sample;
@@ -24,7 +25,8 @@ void *StartThread(void *void_arg) {
       }
     }
     if (has_found) {
-      printf("Found sample at %d\n", i);
+			has_found_any_occurence = true;
+      printf("Found sample at index: %d\n", i);
     }
   }
   return NULL;
@@ -67,4 +69,7 @@ int main() {
   for (int i = 0; i < kThreadCount; ++i) {
 		JoinThread(thread_ids[i]);
   }
+	if(!has_found_any_occurence){
+		printf("No such substrings were found\n");
+	}
 }
