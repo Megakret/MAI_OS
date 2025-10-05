@@ -1,5 +1,6 @@
-#include <os.h>
 #include <stdio.h>
+
+#include <os.h>
 const char *kOutputFileName = "output.txt";
 int main() {
   int num = 0;

@@ -1,21 +1,28 @@
-#include <os.h>
 #include <stdio.h>
+#include <stdbool.h>
+
+#include <os.h>
 const size_t kBuffer = 100;
-void PrintErrorFromChild(pipe_t pipe) {
+bool PrintErrorFromChild(pipe_t pipe) {
   char buffer[kBuffer];
   int bytesN = ReadPipe(pipe, buffer, kBuffer);
+	bool has_error = false;
   if (bytesN > 0) {
+		has_error = true;
     fprintf(stderr, "Error from child: ");
   }
   while (bytesN > 0) {
     fwrite(buffer, sizeof(char), bytesN, stderr);
     bytesN = ReadPipe(pipe, buffer, kBuffer);
   }
+	return has_error;
 }
 pipe_t err_pipe_in;
 void OnChildKilled(signal_t signum) {
-  PrintErrorFromChild(err_pipe_in);
-  exit(-1);
+  bool has_error = PrintErrorFromChild(err_pipe_in);
+	if(has_error){
+  	exit(-1);
+	}
 }
 int main() {
   AddSignalHandler(ChildDeathSig, &OnChildKilled);

@@ -47,3 +47,4 @@ build
 compile_commands.json
 compile_edit.py
 .cache
+log*.txt
