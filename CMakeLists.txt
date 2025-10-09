@@ -8,5 +8,4 @@ set(CMAKE_C_COMPILER )
 set(INCLUDES ${CMAKE_SOURCE_DIR}/includes)
 
 add_subdirectory(os_wrapper)
-add_subdirectory(laba_1_var3)
 add_subdirectory(lab2_var18)
