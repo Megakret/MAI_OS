@@ -8,7 +8,7 @@ FROM gcc:14
 # These commands copy your files into the specified directory in the image
 # and set that as the working location
 RUN apt-get update 
-RUN apt-get install -y --no-upgrade cmake clang-tidy sudo strace
+RUN apt-get install -y --no-upgrade cmake clang-tidy sudo strace python3 pip python3-matplotlib
 RUN useradd -m -s /bin/bash developer && \
     echo "developer ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 COPY . ./workspace
