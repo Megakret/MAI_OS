@@ -4,9 +4,7 @@ class Thread {
 public:
   Thread(ThreadFunc);
   Thread(const Thread &); // for the vector :(
-  Thread(const Thread &&) noexcept;
   Thread &operator=(const Thread &) = delete;
-  Thread &operator=(Thread &&) noexcept;
   virtual ~Thread() noexcept;
 
   virtual void Join();
