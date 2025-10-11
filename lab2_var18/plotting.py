@@ -13,12 +13,21 @@ plt.savefig("TimePlot.png", dpi=300)
 plt.close()
 
 #Acceleration plot
-plt.plot(list(range(1,threadsCount+1)), list(T1/res for res in results), 'o-')
+acceleration_values = list(T1/res for res in results)
+x_points = list(range(1, threadsCount+1))
+
+plt.plot(x_points, acceleration_values, 'o-')
+plt.plot([1, threadsCount], [1, threadsCount], 'r--', alpha=0.7)
+
+for i, (x, y) in enumerate(zip(x_points, acceleration_values)):
+    plt.annotate(f'{y:.2f}', (x, y), textcoords="offset points",
+                 xytext=(0,10), ha='center', fontsize=9)
+
 plt.xlabel('Number of Threads')
 plt.ylabel('Acceleration')
 plt.title("Acceleration Plot")
 plt.grid(True)
-plt.savefig("AccelerationPlot.png", dpi=300) 
+plt.savefig("AccelerationPlot.png")
 plt.close()
 
 #Effectivness plot

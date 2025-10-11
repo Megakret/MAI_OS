@@ -2,7 +2,6 @@ import subprocess
 import time
 import string
 import os
-import matplotlib.pyplot as plt
 def a_string(length: int)->str:
     return "a" * length
 kFieldString = a_string(int(1e6))
